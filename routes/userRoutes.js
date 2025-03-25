@@ -6,9 +6,7 @@ const {
   currentUSer,
 } = require('../controller/userController');
 const authToken = require('../middleware/validateToken');
-
 const router = express.Router();
-
 router.post('/signup', userSignup);
 router.post('/login', userLogin);
 router.get('/current', authToken, currentUSer);

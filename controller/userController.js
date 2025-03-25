@@ -3,6 +3,7 @@ const userSchema = require('../models/UserModel');
 const jwt = require('jsonwebtoken');
 
 const userSignup = async (req, res) => {
+
   try {
     const { name, email, password } = req.body;
 
@@ -37,6 +38,28 @@ const userSignup = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+  
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    res.status(400).json('all the fields are necessary');
+  }
+  const checkUser = await userSchema.findOne({ email });
+  if (checkUser) {
+    res.status(409).json('user already exists');
+  }
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const user = await userSchema.create({
+    name,
+    email,
+    password: hashedPassword,
+  });
+  if (user) {
+    res.status(201).json({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      password: user.password,
+
     });
 
     if (user) {
@@ -54,7 +77,6 @@ const userSignup = async (req, res) => {
       .json({ message: 'Internal server error during signup' });
   }
 };
-
 const userLogin = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {

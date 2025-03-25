@@ -8,16 +8,12 @@ const router = require('./routes/contactRoutes');
 const router2 = require('./routes/userRoutes');
 const errors = require('./middleware/errorHandler');
 const connectDb = require('./config/db');
+const cors = require('cors');
 
-// Security middleware
-app.use(helmet());
-app.use(cors());
+app.use(cors()); // Allows all origins (for development)
+app.use(express.json()); // Enables JSON parsing
 
-// Body parser middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
-
-// Connect to database
+app.use(express.json());
 connectDb();
 
 // Routes
